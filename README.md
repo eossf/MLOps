@@ -33,4 +33,9 @@ docker pull jupyter/tensorflow-notebook
 docker run -p 8888:8888 --rm --user $(id -u):$(id -g) --group-add users -v "${PWD}":/home/jovyan/work jupyter/tensorflow-notebook
 ````
 
+You can open up with the url displayed in the container log, for example : http://127.0.0.1:8888/?token=1390c921c5b804919597266b1a8c634700b410fc09459078
 
+
+## Reference
+
+https://github.com/jupyter/jupyter/wiki
