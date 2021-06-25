@@ -26,19 +26,34 @@ function valid_ip()
     return $stat
 }
 
-
 # get info back for ansible provisionning
-NODE=`curl "https://api.vultr.com/v2/instances"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.instances[].main_ip' | tr -d '"'`
-for ip in $NODE
+#NODES=`curl "https://api.vultr.com/v2/instances"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.'`
+#NODE_LABEL=`echo $NODES | jq '.instances[].label'`
+#NODE_MAIN_IP=`echo $NODES | jq '.instances[].main_ip' | tr -d '"'`
+#NODE_INTERNAL_IP=`echo $NODES | jq '.instances[].internal_ip' | tr -d '"'`
+
+##
+NODE_MAIN_IP="1.0.0.0 2.0.0.0 3.0.0.0 4.0.0.0 5.0.0.0 6.0.0.0 7.0.0.0"
+NODE_LABEL="BOOTSTRAP MASTER01 MASTER02 MASTER03 WORKER01 WORKER02 WORKER03"
+##
+
+for ip in $NODE_MAIN_IP
 do
     if valid_ip $ip; then 
         if [[ $ip == "0.0.0.0" ]]; then
             stat='bad'
         else
             stat='good'
+            sed -i 's/#/REPLACEMENT/g' 
+            printf "Configuration in inventory for %-20s: %s\n" "$ip" " done"
         fi
     else
         stat='bad';
     fi
-    printf "%-20s: %s\n" "$ip" "$stat"
+    printf "%-20s: %s\n" "$ip" " $stat"
+    echo
+done
+
+for t in ${NODE_LABEL[@]}; do
+  echo $t
 done
