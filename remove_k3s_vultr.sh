@@ -1,10 +1,15 @@
 #!/bin/bash
 
-VULTR_API_KEY=$1
-if [[ $VULTR_API_KEY == "" ]] ; then
-	echo "Please enter the VULTR_API_KEY parameter"
-	exit;
+tmpapi="$1"
+if [[ $tmpapi == "" ]] ; then
+	tmpapi=`env | grep "VULTR_API_KEY" | cut -d"=" -f2`
+  if [[ $tmpapi == "" ]] ; then
+    echo "Please enter the VULTR_API_KEY parameter or exported env var"
+    exit;
+  fi
 fi
+
+VULTR_API_KEY=$tmpapi
 
 # get info back for ansible provisionning
 NODE=`curl "https://api.vultr.com/v2/instances"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.instances[].id' | tr -d '"'`

@@ -1,20 +1,22 @@
 #!/bin/bash
 
-VULTR_API_KEY=$1
-if [[ $VULTR_API_KEY == "" ]] ; then
-	echo "Please enter the VULTR_API_KEY parameter"
-	exit;
+tmpapi="$1"
+if [[ $tmpapi == "" ]] ; then
+	tmpapi=`env | grep "VULTR_API_KEY" | cut -d"=" -f2`
+  if [[ $tmpapi == "" ]] ; then
+    echo "Please enter the VULTR_API_KEY parameter or exported env var"
+    exit;
+  fi
 fi
 
+VULTR_API_KEY=$tmpapi
 plan="vc2-1c-2gb"
 osid="362"
 region="cdg"
 
-# set your key
-# export VULTR_API_KEY="ZZZZZYYYYYY"
-
 # verify 
 curl -s "https://api.vultr.com/v2/instances" -X GET -H "Authorization: Bearer ${VULTR_API_KEY}"
+echo 
 
 # create 6 nodes (3 masters + 3 workers)
 # we need regions, plans, OS, private network, ssh key
@@ -31,11 +33,9 @@ curl -s "https://api.vultr.com/v2/instances" -X GET -H "Authorization: Bearer ${
 #  -H "Authorization: Bearer ${VULTR_API_KEY}"
 
 # private network, list
-APN=`curl -s "https://api.vultr.com/v2/private-networks" \
-  -X GET \
-  -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.networks[].id' | tr -d '"'`
+APN=`curl -s "https://api.vultr.com/v2/private-networks" -X GET -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.networks[].id' | tr -d '"'`
 
-if [[ $APN -eq "" ]]; then 
+if [[ $APN == "" ]]; then 
     # create one private network
     APN=`curl -s "https://api.vultr.com/v2/private-networks" \
     -X POST \
@@ -63,7 +63,7 @@ fi
 SSHKEY_ID=`curl -s "https://api.vultr.com/v2/ssh-keys"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.ssh_keys[].id' | tr -d '"'`
 
 # create masters and workers
-for node in master-1 master-2 master-3 worker-1 worker-2 worker-3
+for node in bootstrap 
 do
   DATA='{ "region" : "'$region'",
   "plan" : "'$plan'",
@@ -73,9 +73,8 @@ do
   "attach_private_network" : ["'$APN'"],
   "sshkey_id" : ["'$SSHKEY_ID'"]
   }'
-  curl "https://api.vultr.com/v2/instances" \
-  -X POST \
-  -H "Authorization: Bearer ${VULTR_API_KEY}" \
-  -H "Content-Type: application/json" \
-  --data "$DATA"
+  echo "Create node:"$node
+  curl "https://api.vultr.com/v2/instances" -X POST -H "Authorization: Bearer ${VULTR_API_KEY}" -H "Content-Type: application/json" --data "$DATA"
 done
+
+echo
