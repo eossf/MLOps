@@ -63,7 +63,7 @@ fi
 SSHKEY_ID=`curl -s "https://api.vultr.com/v2/ssh-keys"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.ssh_keys[].id' | tr -d '"'`
 
 # create masters and workers
-for node in BOOTSTRAP MASTER01 MASTER02 MASTER03 WORKER01 WORKER02 WORKER03
+for node in MASTER01 MASTER02 MASTER03 NODE01 NODE02 NODE03
 do
   DATA='{ "region" : "'$region'",
   "plan" : "'$plan'",

@@ -10,6 +10,8 @@ if [[ $tmpapi == "" ]] ; then
 fi
 
 cp -f inventory-k3s.yml inventory.yml
+echo "" > kube_master.yml
+echo "" > kube_node.yml
 
 VULTR_API_KEY=$tmpapi
 
@@ -34,12 +36,6 @@ NODE_LABEL=`echo $NODES | jq '.instances[].label' | tr -d '"'`
 NODE_MAIN_IP=`echo $NODES | jq '.instances[].main_ip' | tr -d '"'`
 NODE_INTERNAL_IP=`echo $NODES | jq '.instances[].internal_ip' | tr -d '"'`
 
-echo $NODE_MAIN_IP
-echo $NODE_LABEL    
-
-#NODE_MAIN_IP="95.179.217.210 95.179.222.25 45.63.114.46 217.69.2.107 108.61.176.206 104.238.191.60 95.179.217.140"
-#NODE_LABEL="BOOTSTRAP MASTER01 MASTER02 MASTER03 WORKER01 WORKER02 WORKER03"
-
 HOSTNAME=()
 i=0
 for t in ${NODE_LABEL[@]}; do
@@ -55,14 +51,34 @@ do
             stat='bad'
         else
             stat='good'
-            sed -i 's/#'${HOSTNAME[$i]}_MAIN_IP'/"'$ip'"/g' inventory.yml
-            sed -i 's/#'${HOSTNAME[$i]}_HOSTNAME'/'${HOSTNAME[$i]}'/g' inventory.yml
-            printf "%-20s: %s\n" "$ip" " done"
+#            sed -i 's/#'${HOSTNAME[$i]}_MAIN_IP'/"'$ip'"/g' kube_master.yml
+#            sed -i 's/#'${HOSTNAME[$i]}_HOSTNAME'/'${HOSTNAME[$i]}'/g' inventory.yml
+echo ${HOSTNAME[$i]}
+            if [[ ${HOSTNAME[$i]}  =~ "MASTER" ]]; then
+echo '
+            #KUBE_MASTER_HOSTNAME:
+              ansible_host: #KUBE_MASTER_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+' | sed 's/#KUBE_MASTER_HOSTNAME/'${HOSTNAME[$i]}'/g' | sed 's/#KUBE_MASTER_MAIN_IP/'$ip'/g' >> kube_master.yml
+            fi
+            if [[ ${HOSTNAME[$i]}  =~ "WORKER" ]]; then
+echo '
+            #KUBE_NODE_HOSTNAME:
+              ansible_host: #KUBE_NODE_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+' | sed 's/#KUBE_NODE_HOSTNAME/'${HOSTNAME[$i]}'/g' | sed 's/#KUBE_NODE_MAIN_IP/'$ip'/g' >> kube_node.yml
+            fi
         fi
     else
         stat='bad';
     fi
-    printf "%-20s: %s\n" "$ip" " $stat"
-    echo
+#    printf "%-20s: %s\n" "$ip" " $stat"
+
     ((i=i+1))
 done
