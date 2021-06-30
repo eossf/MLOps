@@ -16,11 +16,3 @@ all:
         metallb_internal_ip_range: 192.168.122.200-192.168.122.240
         falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
       children:
-        kube_master:
-          hosts:
-#KUBE_MASTER
-        kube_node:
-          hosts:
-#KUBE_NODE
-
-...

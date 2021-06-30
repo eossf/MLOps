@@ -51,8 +51,6 @@ do
             stat='bad'
         else
             stat='good'
-#            sed -i 's/#'${HOSTNAME[$i]}_MAIN_IP'/"'$ip'"/g' kube_master.yml
-#            sed -i 's/#'${HOSTNAME[$i]}_HOSTNAME'/'${HOSTNAME[$i]}'/g' inventory.yml
 echo ${HOSTNAME[$i]}
             if [[ ${HOSTNAME[$i]}  =~ "MASTER" ]]; then
 echo '
@@ -64,7 +62,7 @@ echo '
               ansible_become_user: "root"
 ' | sed 's/#KUBE_MASTER_HOSTNAME/'${HOSTNAME[$i]}'/g' | sed 's/#KUBE_MASTER_MAIN_IP/'$ip'/g' >> kube_master.yml
             fi
-            if [[ ${HOSTNAME[$i]}  =~ "WORKER" ]]; then
+            if [[ ${HOSTNAME[$i]}  =~ "NODE" ]]; then
 echo '
             #KUBE_NODE_HOSTNAME:
               ansible_host: #KUBE_NODE_MAIN_IP
@@ -78,7 +76,19 @@ echo '
     else
         stat='bad';
     fi
-#    printf "%-20s: %s\n" "$ip" " $stat"
 
     ((i=i+1))
 done
+
+# subsitute all
+echo '
+        kube_master:
+          hosts:
+' >> inventory.yml
+cat kube_master.yml >> inventory.yml
+
+echo '
+        kube_node:
+          hosts:
+' >> inventory.yml
+cat kube_node.yml >> inventory.yml

@@ -1,1 +1,25 @@
 
+
+            NODE01:
+              ansible_host: 45.32.151.198
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+
+
+            NODE02:
+              ansible_host: 95.179.220.8
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+
+
+            NODE03:
+              ansible_host: 95.179.214.80
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+

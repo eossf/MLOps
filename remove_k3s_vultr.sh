@@ -33,6 +33,6 @@ do
     echo "Delete node: "$NODE_LABEL
     curl -s "https://api.vultr.com/v2/instances/$node" -X DELETE -H "Authorization: Bearer ${VULTR_API_KEY}"
   else
-    echo "** not changed **"
+    echo "** not changed  **"
   fi
 done

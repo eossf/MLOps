@@ -1,7 +1,7 @@
 
 
             MASTER01:
-              ansible_host: 136.244.118.138
+              ansible_host: 45.76.44.225
               ansible_ssh_user: "root"
               ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
               ansible_become: true
@@ -9,7 +9,7 @@
 
 
             MASTER02:
-              ansible_host: 199.247.8.11
+              ansible_host: 199.247.10.182
               ansible_ssh_user: "root"
               ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
               ansible_become: true
@@ -17,7 +17,7 @@
 
 
             MASTER03:
-              ansible_host: 217.69.10.236
+              ansible_host: 95.179.219.167
               ansible_ssh_user: "root"
               ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
               ansible_become: true
