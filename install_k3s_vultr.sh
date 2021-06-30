@@ -74,7 +74,7 @@ do
   "sshkey_id" : ["'$SSHKEY_ID'"]
   }'
   echo "Create node:"$node
-  #curl "https://api.vultr.com/v2/instances" -X POST -H "Authorization: Bearer ${VULTR_API_KEY}" -H "Content-Type: application/json" --data "$DATA"
+  curl "https://api.vultr.com/v2/instances" -X POST -H "Authorization: Bearer ${VULTR_API_KEY}" -H "Content-Type: application/json" --data "$DATA"
   echo
 done
 

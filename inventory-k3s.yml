@@ -1,0 +1,68 @@
+---
+
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  children:
+    kube_cluster:
+      vars:
+        docker_registry: http://192.168.122.199
+        k3s_cluster_secret: Ahguario7Eefooph6ooweish9peenaeshaideeFokuay7iehoe3ahgei3aithoo7 # This is a secret and should be Vaulted!
+        k3s_encryption_secret: "4mLnvo0Lrb7iSUv7yF5IKOYvEkcnGfyBauzhCjtNRgc=" # This is a secret and should be Vaulted!
+        k3s_version: v1.20.5+k3s1
+        external_interface: eth1
+        internal_interface: eth0
+        metallb_external_ip_range: 192.168.0.3-192.168.0.240
+        metallb_internal_ip_range: 192.168.122.200-192.168.122.240
+        falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
+      children:
+        bootstrap:
+          hosts:
+            #BOOTSTRAP_HOSTNAME:
+              ansible_host: #BOOTSTRAP_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+        kube_master:
+          hosts:
+            #MASTER01_HOSTNAME:
+              ansible_host: #MASTER01_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+            #MASTER02_HOSTNAME:
+              ansible_host: #MASTER02_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+            #MASTER03_HOSTNAME:
+              ansible_host: #MASTER03_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+        kube_node:
+          hosts:
+            #WORKER01_HOSTNAME:
+              ansible_host: #WORKER01_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+            #WORKER02_HOSTNAME:
+              ansible_host: #WORKER02_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+            #WORKER03_HOSTNAME:
+              ansible_host: #WORKER03_MAIN_IP
+              ansible_ssh_user: "root"
+              ansible_ssh_private_key_file: "/home/metairie/.ssh/id_rsa"
+              ansible_become: true
+              ansible_become_user: "root"
+
+...
