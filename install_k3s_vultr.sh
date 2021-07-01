@@ -14,6 +14,21 @@ plan="vc2-1c-2gb"
 osid="362"
 region="cdg"
 
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
 # verify 
 curl -s "https://api.vultr.com/v2/instances" -X GET -H "Authorization: Bearer ${VULTR_API_KEY}"
 echo 
@@ -78,4 +93,52 @@ do
   echo
 done
 
-echo
+echo "Wait provisionning finishes"
+sleep 120
+
+
+echo "set internal interface "
+# get info back for ansible provisionning
+NODES=`curl "https://api.vultr.com/v2/instances"   -X GET   -H "Authorization: Bearer ${VULTR_API_KEY}" | jq '.'`
+NODE_LABEL=`echo $NODES | jq '.instances[].label' | tr -d '"'`
+NODE_MAIN_IP=`echo $NODES | jq '.instances[].main_ip' | tr -d '"'`
+NODE_INTERNAL_IP=`echo $NODES | jq '.instances[].internal_ip' | tr -d '"'`
+
+HOSTNAME=()
+i=0
+for t in ${NODE_LABEL[@]}; do
+  HOSTNAME[$i]=$t
+  ((i=i+1))
+done
+
+PRIVATE=()
+i=0
+for t in ${NODE_INTERNAL_IP[@]}; do
+  PRIVATE[$i]=$t
+  ((i=i+1))
+done
+
+i=0
+for ip in $NODE_MAIN_IP
+do
+    if valid_ip $ip; then 
+        if [[ $ip == "0.0.0.0" ]]; then
+            stat='bad'
+        else
+            stat='good'
+            if [[ ${HOSTNAME[$i]}  =~ "MASTER" || ${HOSTNAME[$i]}  =~ "NODE" ]]; then
+              cp -f enp6s0.tmpl ifcfg-enp6s0
+              echo ${HOSTNAME[$i]}" status is "$stat" and main ip="$ip
+              echo "setup private interface "${PRIVATE[$i]}
+              sed -i 's/#IPADDR/'${PRIVATE[$i]}'/g' ifcfg-enp6s0
+              scp -i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no" ifcfg-enp6s0 root@"$ip":/etc/sysconfig/network-scripts/ifcfg-enp6s0
+              ssh -i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no" root@"$ip" "nmcli con load /etc/sysconfig/network-scripts/ifcfg-enp6s0"
+              ssh -i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no" root@"$ip" "nmcli con up 'System enp6s0'"
+            fi
+        fi
+    else
+        stat='bad';
+    fi
+
+    ((i=i+1))
+done

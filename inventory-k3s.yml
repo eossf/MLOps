@@ -12,7 +12,7 @@ all:
         k3s_version: v1.20.5+k3s1
         external_interface: eth1
         internal_interface: eth0
-        metallb_external_ip_range: 192.168.0.3-192.168.0.240
+        metallb_external_ip_range: 192.168.0.128-192.168.0.240
         metallb_internal_ip_range: 192.168.122.200-192.168.122.240
         falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
       children:
