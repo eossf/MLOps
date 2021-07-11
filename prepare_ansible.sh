@@ -51,7 +51,7 @@ do
             stat='bad'
         else
             stat='good'
-echo ${HOSTNAME[$i]}
+            echo ${HOSTNAME[$i]}
             if [[ ${HOSTNAME[$i]}  =~ "MASTER" ]]; then
 echo '
             #KUBE_MASTER_HOSTNAME:
