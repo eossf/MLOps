@@ -15,19 +15,23 @@ class Ball{
     x = width / 2;
     y = height - diameter - 1;
     vy = -10;
-    vx = random(-5,5);
+    vx = random(-5,-2);
     mv = false;
   }
  
-  public void bounceY(int pvx){
-    vy *= -1;
-    vx *= -pvx;
-  }
-  
   public void bounceY(){
     vy *= -1;
   }
   
+  public void bounceX(){
+    vx *= -1;
+  }
+  
+  public void bounceXY(){
+    bounceX();
+    bounceY();
+  }
+ 
   public void display(){
     fill(#FFF80D);
     ellipse(x,y,diameter,diameter);
@@ -70,5 +74,8 @@ class Ball{
   
   public float getVX(){
     return vx;
+  }
+  public float getVY(){
+    return vy;
   }
 }

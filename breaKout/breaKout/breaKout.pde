@@ -28,58 +28,22 @@ void draw(){
   bar.display();
   if (ball.mv){
     is_bounced_with_bar();
-    is_collided_with_wall();
   }
-  wall.display();
+  wall.display(ball);
 }
 
 void mousePressed(){
-  ball.setY(ball.getY()-10);
-  ball.setVY(-10);
-  ball.mv = true;
+  if (!ball.mv) {
+    ball.setY(ball.getY()-10);
+    ball.setVY(-10);
+    ball.mv = true;
+  }
 }
 
 void is_bounced_with_bar(){
   float Y = ball.getY();
   float X = ball.getX();
   if ( Y + radius > bar.getY() && ( X > bar.getX() - miwbar && X < bar.getX() + miwbar) ){
-    if (X < bar.getX()){
-      if (ball.getVX() < 0) {
-        ball.bounceY();
-      } else {
-        ball.bounceY(-1);     
-      }
-    } else {
-      if (ball.getVX() >= 0) {
-        ball.bounceY(-1);
-      } else {
-        ball.bounceY();     
-      }
-    }  
-  }
-}
-
-void is_collided_with_wall(){
-  float Y = ball.getY();
-  float X = ball.getX();
-
-  // parse bricks in front
-  Brick b = new Brick();
-  float x, y, h, w; // brick coordinate, height, weight
-
-  for (int j = wallRows - 1; j >= 0; j--){ // y
-    for (int i = 0; i < wallCols; i++){ // x
-      b = wall.getBrick(i,j);
-      if (b.visible) {
-        y = b.getY();
-        x = b.getX();
-        h = b.height();
-        w = b.weight();
-        if ( Y - radius < y + h  && X >= x && X <= x + w ) {
-          ball.bounceY(-1);
-          b.hide();
-        }
-      }
-    }
+    ball.bounceY();
   }
 }

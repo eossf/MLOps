@@ -14,14 +14,14 @@ public class Wall{
     buildWall();
   }
 
-  public void display(){
+  public void display(Ball ball){
     for (int j = 0; j < rows; j++){ // y
       for (int i = 0; i < cols; i++){ // x
-        aBricks[i][j].putBrick();
+        aBricks[i][j].putBrick(ball);
       }
     }
   }
-  
+
   public void buildWall(){
     for (int j = 0; j < rows; j++){ // y
       for (int i = 0; i < cols; i++){ // x
