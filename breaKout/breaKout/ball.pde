@@ -1,11 +1,14 @@
 class Ball{
   private float x,y,vx,vy,diameter,radius;
+  private int wscreen,hscreen;
   private boolean mv;
-  public Ball(){
-    init(20);
-  }
-  public Ball(float pdiameter){
+  private int live;
+  
+  public Ball(float pdiameter,int pwscreen,int phscreen, int plive){
     diameter = pdiameter;
+    wscreen = pwscreen;
+    hscreen = phscreen;
+    live = plive;
     init(pdiameter);
   }
  
@@ -34,18 +37,23 @@ class Ball{
  
   public void display(){
     fill(#FFF80D);
+    stroke(0);
     ellipse(x,y,diameter,diameter);
     if (mv) {
       x += vx;
       y += vy;
-      if (x > width - radius || x < radius){
+      if (x > wscreen - radius || x < radius){
         vx *= -1;
       }
       if (y < radius){
         vy *= -1;
       }
-      if (y > height + diameter){
+      if (y > hscreen + diameter){
         init(diameter);
+        live--;
+        if (live < 0) {
+          exit();
+        }
       }
     } else {
       x = mouseX;
@@ -75,7 +83,12 @@ class Ball{
   public float getVX(){
     return vx;
   }
+  
   public float getVY(){
     return vy;
+  }
+  
+  public int getLive(){
+    return live;
   }
 }

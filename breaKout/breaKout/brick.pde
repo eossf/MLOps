@@ -31,14 +31,7 @@ public class Brick {
     }
   }
   
-public boolean is_collided_with_ball(float xball, float yball, float radius){
-  float dx = abs(xball - x) - wbar / 2, dy = abs(yball - y) - hbar / 2;
-  if (dx > radius || dy > radius) { return false; }
-  if (dx <= 0 || dy <= 0) { return true; }
-  return (dx * dx + dy * dy <= radius * radius);
-}
-
-  /*public boolean is_collided_with_ball(float xball, float yball, float radius){
+  public boolean is_collided_with_ball(float xball, float yball, float radius){
     float testX = xball;
     float testY = yball;
 
@@ -52,7 +45,7 @@ public boolean is_collided_with_ball(float xball, float yball, float radius){
         testY = (y + hbrick);
 
     return ((xball - testX) * (xball - testX) + (yball - testY) * (yball - testY)) < radius * radius;      
-  }*/
+  }
 
   public float weight(){
     return wbrick;
@@ -80,4 +73,10 @@ public boolean is_collided_with_ball(float xball, float yball, float radius){
     visible = false;
   }
 
+  public boolean isVisible(){
+    return visible;
+  }
+  public boolean isHidden(){
+    return !visible;
+  }
 }

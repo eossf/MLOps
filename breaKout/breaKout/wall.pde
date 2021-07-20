@@ -34,4 +34,15 @@ public class Wall{
     return aBricks[px][py];
   }
 
+  public String getScore(){
+    int score=0;
+    for (int j = 0; j < rows; j++){ // y
+      for (int i = 0; i < cols; i++){ // x
+        if (aBricks[i][j].isHidden()) {
+          score++;
+        }
+      }
+    }
+    return ""+score;
+  }
 }

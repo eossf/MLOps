@@ -3,23 +3,32 @@
 Ball ball;
 Bar bar;
 Wall wall;
+Score score;
 
 private int wallCols, wallRows; // x,y
 private float diameter, radius;
 private float wbar, hbar, miwbar;
+private int currentScore, live;
+private int wboard, hboard, wscoreboard;
 
 void setup() {
-  wallCols = 5;
-  wallRows = 20;
+  live = 3;
+  currentScore = 0;
+  wallCols = 12;
+  wallRows = 10;
   diameter = 20;
   radius = diameter/2;
   wbar = 100;
   hbar = 10;
   miwbar = wbar/2;
-  size(600, 600);
-  ball = new Ball(diameter);
+  wboard = 800;
+  hboard = 600;
+  wscoreboard = 100;
+  size(800, 600);
+  ball = new Ball(diameter, 600, 600, live);
   bar = new Bar(wbar,hbar);
   wall = new Wall(wallCols,wallRows);  // x,y
+  score = new Score(wall, ball);
 }
 
 void draw(){
@@ -30,6 +39,7 @@ void draw(){
     is_bounced_with_bar();
   }
   wall.display(ball);
+  score.display();
 }
 
 void mousePressed(){
