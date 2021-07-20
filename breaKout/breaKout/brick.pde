@@ -23,34 +23,36 @@ public class Brick {
     if (visible){
       if (is_collided_with_ball(xball,yball,radius)){
         hide();
+        ball.bounceY();
       } else {
         fill(R,G,B);
         rect(x,y,wbrick,hbrick);
       }
     }
   }
+  
+public boolean is_collided_with_ball(float xball, float yball, float radius){
+  float dx = abs(xball - x) - wbar / 2, dy = abs(yball - y) - hbar / 2;
+  if (dx > radius || dy > radius) { return false; }
+  if (dx <= 0 || dy <= 0) { return true; }
+  return (dx * dx + dy * dy <= radius * radius);
+}
 
-  public boolean is_collided_with_ball(float xball, float yball, float radius){
-    // front
-    if (ball.getVY()<0) {
-      if ( xball + radius> x && xball - radius <= x + wbrick && yball - radius < y + hbrick && yball - radius >= y ) {
-        ball.bounceY();
-        return true;
-      }
-    } else {
-      if ( xball + radius> x && xball - radius <= x + wbrick && yball + radius > y && yball + radius < y + hbrick ) {
-        ball.bounceY();
-        return true;
-      }
-    }
-    // left 
-    if ( yball + radius > y && yball + radius < y + hbrick && xball - radius < x + wbrick && xball - radius < x ) {
-     ball.bounceX();
-     return true;
-    }
-      
-    return false;
-  }
+  /*public boolean is_collided_with_ball(float xball, float yball, float radius){
+    float testX = xball;
+    float testY = yball;
+
+    if (testX < x)
+        testX = x;
+    if (testX > (x + wbrick))
+        testX = (x + wbrick);
+    if (testY < y)
+        testY = y;
+    if (testY > (y + hbrick))
+        testY = (y + hbrick);
+
+    return ((xball - testX) * (xball - testX) + (yball - testY) * (yball - testY)) < radius * radius;      
+  }*/
 
   public float weight(){
     return wbrick;
