@@ -2,7 +2,7 @@
 
 # MLOps Labs
 
-## Installation Docker Jupyter
+## Docker Jupyter
 
 We will install jupyter/tensorflow-notebook which contains scipy, minimal and base image:
 
@@ -36,6 +36,31 @@ docker run -p 8888:8888 --rm --user $(id -u):$(id -g) --group-add users -v "${PW
 You can open up with the url displayed in the container log, for example : http://127.0.0.1:8888/?token=1390c921c5b804919597266b1a8c634700b410fc09459078
 
 
-## Reference
+### Reference
 
 https://github.com/jupyter/jupyter/wiki
+
+ 
+### Play with Notebooks
+
+The folder /jupyter contains example of notebooks you can play with.
+
+## breaKout
+
+This is a more complex example using Deep Learning. 
+Install Processing from https://processing.org/download/
+
+Launch the IDE and open the project breaKout.pde, go to File/Export and generate the application. In a bash terminal run the game.
+
+````bash
+cd breaKout
+cd application.linux64/
+./breaKout
+````
+
+## Deep Learning Robot playing breaKout
+
+````bash
+cd robot
+./launch.sh
+````
